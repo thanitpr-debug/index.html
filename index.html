@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM STATUS | BG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-blue: #00d2ff;
+            --dark-blue: #004080;
+            --bg-dark: #050b14;
+            --panel-bg: rgba(10, 25, 47, 0.85);
+            --border-blue: #0088ff;
+            --text-glow: 0 0 10px #00d2ff;
+            --rank-s: #ff4757;
+            --rank-a: #ffa500;
+            --rank-b: #2ed573;
+            --rank-c: #00d2ff;
+            --rank-d: #70a1ff;
+            --rank-f: #a4b0be;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 85, 255, 0.15) 0%, transparent 80%),
+                linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+            color: #e0f7fc;
+            font-family: 'Prompt', 'Orbitron', sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hud-container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--panel-bg);
+            border: 2px solid var(--border-blue);
+            box-shadow: 0 0 20px rgba(0, 136, 255, 0.4), inset 0 0 15px rgba(0, 210, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .hud-header {
+            text-align: center;
+            border-bottom: 2px solid var(--border-blue);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .hud-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--main-blue);
+            text-shadow: var(--text-glow);
+            letter-spacing: 4px;
+        }
+
+        /* Profile Layout */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .char-frame {
+            position: relative;
+            border: 2px solid var(--main-blue);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            height: 280px;
+        }
+
+        .char-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .char-overlay {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(5, 11, 20, 0.9));
+            padding: 10px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--main-blue);
+        }
+
+        .player-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .info-row {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.15);
+            padding-bottom: 4px;
+        }
+
+        .info-label {
+            color: var(--main-blue);
+            font-weight: 600;
+            width: 130px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .tags-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .tag {
+            background: var(--dark-blue);
+            border: 1px solid var(--main-blue);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Section Panels */
+        .panel-section {
+            background: rgba(0, 30, 60, 0.4);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--main-blue);
+            border-left: 4px solid var(--main-blue);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            text-shadow: var(--text-glow);
+        }
+
+        /* Skills Table */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .skill-card {
+            background: rgba(5, 15, 30, 0.7);
+            border: 1px solid rgba(0, 136, 255, 0.3);
+            padding: 10px 15px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rank-badge {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.1rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .rank-B { color: var(--rank-b); text-shadow: 0 0 5px var(--rank-b); }
+        .rank-C { color: var(--rank-c); text-shadow: 0 0 5px var(--rank-c); }
+        .rank-D { color: var(--rank-d); }
+        .rank-F { color: var(--rank-f); }
+
+        /* Portfolio Brands */
+        .brands-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            line-height: 1.8;
+        }
+
+        .brand-item {
+            background: rgba(0, 136, 255, 0.15);
+            border: 1px solid var(--border-blue);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+        }
+
+        /* Experience Stats */
+        .exp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .exp-box {
+            background: rgba(0, 40, 80, 0.5);
+            border: 1px solid var(--main-blue);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .exp-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--main-blue);
+            font-weight: bold;
+        }
+
+        /* Goals Upgrade */
+        .goal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(0, 210, 255, 0.2);
+        }
+
+        .upgrade-arrow {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--main-blue);
+            font-weight: bold;
+        }
+
+        @media (max-width: 650px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+            .char-frame {
+                height: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hud-container">
+    <div class="hud-header">
+        <div class="hud-title">SYSTEM STATUS</div>
+    </div>
+
+    <!-- MAIN PROFILE -->
+    <div class="profile-grid">
+        <div class="char-frame">
+            <!-- ใส่ไฟล์ภาพของคุณในชื่อ character.jpg หรือเปลี่ยนชื่อไฟล์ใน src -->
+            <img src="character.jpg" alt="Player Character" class="char-img">
+            <div class="char-overlay">BG // LEVEL 18</div>
+        </div>
+
+        <div class="player-info">
+            <div>
+                <div class="info-row"><span class="info-label">PLAYER</span> <span>BG</span></div>
+                <div class="info-row"><span class="info-label">CLASS</span> <span>Voice Actor</span></div>
+                <div class="info-row"><span class="info-label">SUB CLASS</span> <span>Animation, VFX, Sound Designer, Programmer</span></div>
+                <div class="info-row"><span class="info-label">LEVEL</span> <span>18</span></div>
+                <div class="info-row"><span class="info-label">COIN</span> <span style="color: #ffd700; font-family: Orbitron;">10,000 Gold</span></div>
+                <div class="info-row" style="border:none;"><span class="info-label">STATUS</span> <span>First year Computer Engineering Student</span></div>
+            </div>
+            
+            <div>
+                <div style="font-size: 0.85rem; color: var(--main-blue); margin-bottom: 4px; font-family: Orbitron;">EQUIPPED TECH:</div>
+                <div class="tags-container">
+                    <span class="tag">C</span>
+                    <span class="tag">HTML</span>
+                    <span class="tag">GitHub</span>
+                    <span class="tag">Lua</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SKILLS RANK -->
+    <div class="panel-section">
+        <div class="section-title">⚡ SKILLS ABILITY</div>
+        <div class="skills-grid">
+            <div class="skill-card"><span>Advance Voice Actor</span> <span class="rank-badge rank-B">B</span></div>
+            <div class="skill-card"><span>Basic Sound Designer</span> <span class="rank-badge rank-C">C</span></div>
+            <div class="skill-card"><span>Basic Programming (C, Lua)</span> <span class="rank-badge rank-D">D-</span></div>
+            <div class="skill-card"><span>Basic VFX</span> <span class="rank-badge rank-D">D</span></div>
+            <div class="skill-card"><span>AI Utility</span> <span class="rank-badge rank-C">C+</span></div>
+            <div class="skill-card"><span>Basic Animation</span> <span class="rank-badge rank-F">F+</span></div>
+        </div>
+    </div>
+
+    <!-- PORTFOLIO CO-WORK -->
+    <div class="panel-section">
+        <div class="section-title">🤝 PORTFOLIO (เคยร่วมงานกับ)</div>
+        <div class="brands-list">
+            <span class="brand-item">Wowsoy Studio</span>
+            <span class="brand-item">Sweet and sour studio</span>
+            <span class="brand-item">Iyuno Thailand</span>
+            <span class="brand-item" style="color: var(--main-blue); font-weight: bold;">สนุกดีออก</span>
+            <span class="brand-item">Saber manga</span>
+            <span class="brand-item">Minecraft Verity</span>
+            <span class="brand-item">NG shonen</span>
+            <span class="brand-item">Tulips</span>
+            <span class="brand-item">Panithan</span>
+        </div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="panel-section">
+        <div class="section-title">📊 EXPERIENCE LOG</div>
+        <div class="exp-grid">
+            <div class="exp-box">
+                <div class="exp-num">2.5 Years</div>
+                <div style="font-size: 0.85rem; color: #aaa;">Voice Actor</div>
+            </div>
+            <div class="exp-box">
+                <div class="exp-num">Active</div>
+                <div style="font-size: 0.85rem; color: #aaa;">Basic Anim / VFX / Sound</div>
+            </div>
+            <div class="exp-box">
+                <div class="exp-num">Active</div>
+                <div style="font-size: 0.85rem; color: #aaa;">Basic Programming</div>
+            </div>
+            <div class="exp-box">
+                <div class="exp-num">1 / 2 / 4</div>
+                <div style="font-size: 0.85rem; color: #aaa;">Cinematic / Anime / Game</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GOALS UPGRADE -->
+    <div class="panel-section" style="margin-bottom: 0;">
+        <div class="section-title">🎯 MY GOALS (UPGRADE SYSTEM)</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+            <div class="goal-item"><span>Voice Actor</span> <span class="upgrade-arrow">B ➔ A+</span></div>
+            <div class="goal-item"><span>Programmer</span> <span class="upgrade-arrow">D- ➔ S</span></div>
+            <div class="goal-item"><span>Sound Designer</span> <span class="upgrade-arrow">C ➔ B</span></div>
+            <div class="goal-item"><span>Animation</span> <span class="upgrade-arrow">F+ ➔ C+</span></div>
+            <div class="goal-item"><span>VFX</span> <span class="upgrade-arrow">D ➔ C+</span></div>
+            <div class="goal-item"><span>AI</span> <span class="upgrade-arrow">C+ ➔ S</span></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
